@@ -10,117 +10,126 @@ from pyrogram import Client
 import logging
 import os
 import csv
+from dotenv import load_dotenv
+from pathlib import Path
 
-api_id = #######
-api_hash = "#########"
+
+dotenv_path = Path('.env')
+load_dotenv(dotenv_path=dotenv_path)
+
+api_id = os.getenv('api_id')
+api_hash = os.getenv('api_hash')
 
 app = Client("my_account", api_id=api_id, api_hash=api_hash)
 
+
 @app.on_message()
 async def log(client, message):
-    
-    if (message.from_user):
-        if(message.photo):
+
+    if message.from_user:
+        if message.photo:
             file = await app.download_media(message)
-            cwd = os.getcwd() 
-            patch = cwd + "/message/" + str(message.chat.id) + "/" 
+            cwd = os.getcwd()
+            patch = cwd + "/message/" + str(message.chat.id) + "/"
 
             name_file = file
 
-            if(os.path.exists(patch + "chat.csv")):
-                with open(str(patch) + 'chat.csv', 'a') as file:
-                    writer = csv.writer(file)     
+            if os.path.exists(patch + "chat.csv"):
+                with open(str(patch) + "chat.csv", "a") as file:
+                    writer = csv.writer(file)
                     writer.writerow(
-                       ( message.date, message.from_user.username,  "Фото(" + str(name_file) + ")" )
+                        (
+                            message.date,
+                            message.from_user.username,
+                            "Фото(" + str(name_file) + ")",
+                        )
                     )
             else:
-                with open(str(patch) + 'chat.csv', 'w') as file:
-                    writer = csv.writer(file)     
+                with open(str(patch) + "chat.csv", "w") as file:
+                    writer = csv.writer(file)
                     writer.writerow(
-                        ( message.date, message.from_user.username, "Фото(" + str(name_file) + ")")        
-                    )  
-                
+                        (
+                            message.date,
+                            message.from_user.username,
+                            "Фото(" + str(name_file) + ")",
+                        )
+                    )
+
         else:
             # ЛС проверка
             messagetype = message.chat.type
-            if(str(messagetype) == "ChatType.PRIVATE"):   
-                
-                # Создание папки чата 
+            if str(messagetype) == "ChatType.PRIVATE":
+
+                # Создание папки чата
                 parent_dir = "message/"
                 directory = str(str(message.chat.id))
 
-                print( parent_dir + directory )
+                print(parent_dir + directory)
 
                 if os.path.exists(parent_dir + directory):
                     print("Have Folder")
                 else:
-                    path = os.path.join(parent_dir, directory) 
+                    path = os.path.join(parent_dir, directory)
                     os.mkdir(path)
-                    
-                # Эмоджи
-                if(message.sticker):
 
+                # Эмоджи
+                if message.sticker:
 
                     cwd = os.getcwd()
                     emoji = message.sticker.emoji
-                    patch = cwd + "/message/" + str(message.chat.id) + "/" 
-                    if (os.path.exists(patch + "chat.csv")):
-                        with open(str(patch) + 'chat.csv', 'a') as file:
-                            writer = csv.writer(file)     
+                    patch = cwd + "/message/" + str(message.chat.id) + "/"
+                    if os.path.exists(patch + "chat.csv"):
+                        with open(str(patch) + "chat.csv", "a") as file:
+                            writer = csv.writer(file)
                             writer.writerow(
-                                ( message.date, message.from_user.username, emoji)
+                                (message.date, message.from_user.username, emoji)
                             )
                     else:
-                        with open(str(patch) + 'chat.csv', 'w') as file:
-                            writer = csv.writer(file)     
+                        with open(str(patch) + "chat.csv", "w") as file:
+                            writer = csv.writer(file)
                             writer.writerow(
-                                ( message.date, message.from_user.username, emoji)
-                                
-                            )   
+                                (message.date, message.from_user.username, emoji)
+                            )
 
-                    
                 # Эмоджи казик
-                if(message.dice):
-                    
+                if message.dice:
+
                     cwd = os.getcwd()
                     emoji = message.dice.emoji
-                    patch = cwd + "/message/" + str(message.chat.id) + "/" 
-                    if (os.path.exists(patch + "chat.csv")):
-                        with open(str(patch) + 'chat.csv', 'a') as file:
-                            writer = csv.writer(file)     
+                    patch = cwd + "/message/" + str(message.chat.id) + "/"
+                    if os.path.exists(patch + "chat.csv"):
+                        with open(str(patch) + "chat.csv", "a") as file:
+                            writer = csv.writer(file)
                             writer.writerow(
-                                ( message.date, message.from_user.username, emoji)
+                                (message.date, message.from_user.username, emoji)
                             )
                     else:
-                        with open(str(patch) + 'chat.csv', 'w') as file:
-                            writer = csv.writer(file)     
+                        with open(str(patch) + "chat.csv", "w") as file:
+                            writer = csv.writer(file)
                             writer.writerow(
-                                ( message.date, message.from_user.username, emoji)
+                                (message.date, message.from_user.username, emoji)
                             )
 
-                    
-                #Сообщения Все
+                # Сообщения Все
                 else:
 
                     cwd = os.getcwd()
-                    patch = cwd + "/message/" + str(message.chat.id) + "/" 
-                    if (os.path.exists(patch + "chat.csv")):
-                        with open(str(patch) + 'chat.csv', 'a') as file:
-                            writer = csv.writer(file)     
+                    patch = cwd + "/message/" + str(message.chat.id) + "/"
+                    if os.path.exists(patch + "chat.csv"):
+                        with open(str(patch) + "chat.csv", "a") as file:
+                            writer = csv.writer(file)
                             writer.writerow(
-                                ( message.date, message.from_user.username, message.text)
-                                
-                            )     
+                                (message.date, message.from_user.username, message.text)
+                            )
                     else:
-                        with open(str(patch) + 'chat.csv', 'w') as file:
-                            writer = csv.writer(file)     
+                        with open(str(patch) + "chat.csv", "w") as file:
+                            writer = csv.writer(file)
                             writer.writerow(
-                                ( message.date, message.from_user.username, message.text)
-                                
-                            )   
-                    
+                                (message.date, message.from_user.username, message.text)
+                            )
+
     else:
         print(message)
 
-    
+
 app.run()
