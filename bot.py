@@ -12,7 +12,10 @@ import os
 import csv
 from dotenv import load_dotenv
 from pathlib import Path
+import sqlite3
 
+conn = sqlite3.connect("chat.sqlite")
+cursor = conn.cursor()
 
 dotenv_path = Path(".env")
 load_dotenv(dotenv_path=dotenv_path)
@@ -33,6 +36,15 @@ async def log(client, message):
             patch = cwd + "/message/" + str(message.chat.id) + "/"
 
             name_file = file
+
+            sqlite_insert_query = """INSERT INTO Private_message
+                          (id, name, message, type, date)  VALUES  (NULL, ?, ?, ?, ?)"""
+
+            count = cursor.execute(
+                sqlite_insert_query,
+                (message.from_user.username, "Фото", "1", message.date),
+            )
+            conn.commit()
 
             if os.path.exists(patch + "chat.csv"):
                 with open(str(patch) + "chat.csv", "a") as file:
@@ -77,6 +89,16 @@ async def log(client, message):
 
                     cwd = os.getcwd()
                     emoji = message.sticker.emoji
+
+                    sqlite_insert_query = """INSERT INTO Private_message
+                          (id, name, message, type, date)  VALUES  (NULL, ?, ?, ?, ?)"""
+
+                    count = cursor.execute(
+                        sqlite_insert_query,
+                        (message.from_user.name, emoji, "2", message.date),
+                    )
+                    conn.commit()
+
                     patch = cwd + "/message/" + str(message.chat.id) + "/"
                     if os.path.exists(patch + "chat.csv"):
                         with open(str(patch) + "chat.csv", "a") as file:
@@ -95,6 +117,16 @@ async def log(client, message):
                 if message.dice:
                     cwd = os.getcwd()
                     emoji = message.dice.emoji
+
+                    sqlite_insert_query = """INSERT INTO Private_message
+                          (id, name, message, type, date)  VALUES  (NULL, ?, ?, ?, ?)"""
+
+                    count = cursor.execute(
+                        sqlite_insert_query,
+                        (message.from_user.name, emoji, "3", message.date),
+                    )
+                    conn.commit()
+
                     patch = cwd + "/message/" + str(message.chat.id) + "/"
                     if os.path.exists(patch + "chat.csv"):
                         with open(str(patch) + "chat.csv", "a") as file:
@@ -113,6 +145,16 @@ async def log(client, message):
                 else:
                     cwd = os.getcwd()
                     patch = cwd + "/message/" + str(message.chat.id) + "/"
+
+                    sqlite_insert_query = """INSERT INTO Private_message
+                          (id, name, message, type, date)  VALUES  (NULL, ?, ?, ?, ?)"""
+
+                    count = cursor.execute(
+                        sqlite_insert_query,
+                        (message.from_user.username, message.text, "3", message.date),
+                    )
+                    conn.commit()
+
                     if os.path.exists(patch + "chat.csv"):
                         with open(str(patch) + "chat.csv", "a") as file:
                             writer = csv.writer(file)
@@ -125,7 +167,7 @@ async def log(client, message):
                             writer.writerow(
                                 (message.date, message.from_user.username, message.text)
                             )
-
+    messagetype = message.chat.type
     if str(messagetype) == "ChatType.GROUP":
 
         # Создание папки чатов
