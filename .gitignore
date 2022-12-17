@@ -3,3 +3,4 @@ my_account.session
 message/*
 downloads/*
 .env
+chat.sqlite
