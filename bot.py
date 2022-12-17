@@ -95,7 +95,7 @@ async def log(client, message):
 
                     count = cursor.execute(
                         sqlite_insert_query,
-                        (message.from_user.name, emoji, "2", message.date),
+                        (message.from_user.username, emoji, "2", message.date),
                     )
                     conn.commit()
 
@@ -123,7 +123,7 @@ async def log(client, message):
 
                     count = cursor.execute(
                         sqlite_insert_query,
-                        (message.from_user.name, emoji, "3", message.date),
+                        (message.from_user.username, emoji, "3", message.date),
                     )
                     conn.commit()
 
