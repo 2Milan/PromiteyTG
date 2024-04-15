@@ -1,5 +1,6 @@
 my_account.session-journal
 my_account.session
+my_account.sessions
 message/*
 downloads/*
 .env
